@@ -1,0 +1,18 @@
+.green {
+  color: green;
+  font-weight: bold;
+}
+
+.red {
+  color: red;
+  font-weight: bold;
+}
+
+#vote-table {
+  margin-bottom: 2em;
+}
+
+#vote-table td {
+  padding-left: 15px;
+  padding-right: 15px;
+}
