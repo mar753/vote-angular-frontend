@@ -8,20 +8,29 @@
     </tr>
     <tr *ngFor="let item of items">
       <td class="px-2">{{item.id}}</td>
-      <td class="px-2">{{item.name}}</td> 
+      <td *ngIf="item.editing" class="px-2">
+        <input class="edit-input" (change)="handleItemChange(item)" [(ngModel)]="item.name">
+      </td>
+      <td *ngIf="!item.editing" class="px-2">{{item.name}}</td>
       <td class="px-2">
-        <button class="vote-up btn btn-success btn-sm">Vote Up</button>
+        <button class="btn btn-success btn-sm small-margin-r">Vote Up</button>
         <button class="btn btn-danger btn-sm">Vote Down</button>
       </td>
       <td class="px-2">
-        <button class="btn btn-warning btn-sm" (click)="removeItem(item)">Remove</button>
+        <button *ngIf="item.editing" class="btn btn-info btn-sm edit-button small-margin-r"
+          (click)="editItem(item)">Save</button>
+        <button *ngIf="!item.editing" class="btn btn-dark btn-sm edit-button small-margin-r"
+          (click)="editItem(item)">Edit</button>
+        <button class="btn btn-warning btn-sm remove-button"
+          (click)="removeItem(item)">Remove</button>
       </td>
     </tr>
   </table>
   <div *ngIf="initDone" class="ml-1 mt-1 container">
     <div class="row">
-      <input #name id="new-item-name" type="text">
-      <button id="new-item-button" class="btn btn-primary btn-sm" (click)="addItem(name.value)">Add item</button>
+      <input #name id="new-item-name" class="small-margin-r" type="text">
+      <button id="new-item-button" class="btn btn-primary btn-sm"
+        (click)="addItem(name.value)">Add item</button>
     </div>
   </div>
 </div>

@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
 import { VotePageComponent } from './vote-page.component';
@@ -41,6 +42,14 @@ describe('VotePageComponent', () => {
     return fixture.whenStable();
   }
 
+  function clickEditButton() {
+    const buttonElement = fixture.debugElement.query(
+      By.css('button.edit-button'));
+    buttonElement.nativeElement.dispatchEvent(new Event('click'));
+    fixture.detectChanges();
+    return fixture.whenStable();
+  }
+
   function clickRemoveButton() {
     const buttonElement = fixture.debugElement.query(
       By.css('button.remove-button'));
@@ -49,8 +58,18 @@ describe('VotePageComponent', () => {
     return fixture.whenStable();
   }
 
+  function modifyInput() {
+    const inputElement = fixture.debugElement.query(
+      By.css('input.edit-input'));
+    inputElement.nativeElement.value = 'xxxx';
+    inputElement.nativeElement.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+    return fixture.whenStable();
+  }
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [ FormsModule ],
       declarations: [ VotePageComponent ],
       providers: [ { provide: VotePageService, useValue: votePageServiceMock } ]
     })
@@ -114,6 +133,88 @@ describe('VotePageComponent', () => {
     expect(component.items[0].id).toEqual(1);
     expect(component.items[0].name).toEqual('abc');
     expect(service.postItem).toHaveBeenCalledTimes(1);
+  });
+
+  it('should change "modified" property of an item', () => {
+    expect(component.items.length).toEqual(0);
+    component.addItem('abc');
+    expect(component.items.length).toEqual(1);
+    expect(component.items[0].modified).toEqual(false);
+    component.handleItemChange(component.items[0]);
+    expect(component.items[0].modified).toEqual(true);
+  });
+
+  it('should modify component via view', async(() => {
+    component.addItem('abc');
+    expect(component.items.length).toEqual(1);
+    expect(component.items[0].editing).toEqual(false);
+    expect(component.items[0].modified).toEqual(false);
+    fixture.detectChanges();
+    fixture.whenStable()
+      .then(() => clickEditButton())
+      .then(() => {
+        expect(component.items[0].editing).toEqual(true);
+        expect(component.items[0].modified).toEqual(false);
+      })
+      .then(() => modifyInput())
+      .then(() => {
+        expect(component.items[0].editing).toEqual(true);
+        expect(component.items[0].modified).toEqual(true);
+        return clickEditButton()
+      })
+      .then(() => {expect(service.putItem).toHaveBeenCalledTimes(1)
+      });
+  }));
+
+  it('should not modify component via view', async(() => {
+    component.addItem('abc');
+    expect(component.items.length).toEqual(1);
+    expect(component.items[0].editing).toEqual(false);
+    expect(component.items[0].modified).toEqual(false);
+    fixture.detectChanges();
+    fixture.whenStable()
+      .then(() => clickEditButton())
+      .then(() => {
+        expect(component.items[0].editing).toEqual(true);
+        expect(component.items[0].modified).toEqual(false);
+      })
+      .then(() => clickEditButton())
+      .then(() => {
+        expect(component.items[0].editing).toEqual(false);
+        expect(component.items[0].modified).toEqual(false);
+        expect(service.putItem).not.toHaveBeenCalled()
+      });
+  }));
+
+  it('should modify component - force both flags to true', () => {
+    expect(component.items.length).toEqual(0);
+    component.addItem('abc');
+    component.items[0].modified = true;
+    component.items[0].editing = true;
+    expect(component.items.length).toEqual(1);
+    component.editItem(component.items[0]);
+    expect(service.putItem).toHaveBeenCalledWith(
+      component.items[0].id, component.items[0].name);
+  });
+
+  it('should not modify component - force only modified flag to true', () => {
+    expect(component.items.length).toEqual(0);
+    component.addItem('abc');
+    component.items[0].modified = true;
+    expect(component.items[0].editing).toEqual(false);
+    expect(component.items.length).toEqual(1);
+    component.editItem(component.items[0]);
+    expect(service.putItem).not.toHaveBeenCalled();
+  });
+
+  it('should not modify component - force only editing flag to true', () => {
+    expect(component.items.length).toEqual(0);
+    component.addItem('abc');
+    component.items[0].editing = true;
+    expect(component.items[0].modified).toEqual(false);
+    expect(component.items.length).toEqual(1);
+    component.editItem(component.items[0]);
+    expect(service.putItem).not.toHaveBeenCalled();
   });
 
   it('should remove item via view', async(() => {

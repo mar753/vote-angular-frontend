@@ -8,8 +8,8 @@ import { VotePageService } from './vote-page.service';
 
 describe('VotePageService', () => {
   const mockData = {items: [
-    {id: 1, name: 'QWE'},
-    {id: 2, name: 'RTY'}
+    {id: 1, name: 'QWE', editing: false, modified: false},
+    {id: 2, name: 'RTY', editing: false, modified: false}
   ]};
 
   beforeEach(() => {
