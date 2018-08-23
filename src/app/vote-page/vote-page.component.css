@@ -12,7 +12,6 @@
   margin-bottom: 2em;
 }
 
-#vote-table td {
-  padding-left: 15px;
-  padding-right: 15px;
+.vote-up {
+  margin-right: 2px;
 }

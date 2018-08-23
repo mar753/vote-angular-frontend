@@ -1,25 +1,27 @@
 <div>
   <table id="vote-table" *ngIf="items.length > 0">
-    <tr>
+    <tr class="text-center">
       <th>{{idColumn}}</th>
       <th>{{nameColumn}}</th> 
       <th>{{voteColumn}}</th>
       <th>{{removeColumn}}</th>
     </tr>
     <tr *ngFor="let item of items">
-      <td>{{item.id}}</td>
-      <td>{{item.name}}</td> 
-      <td>
-        <button class="green">Vote Up</button>
-        <button class="red">Vote Down</button>
+      <td class="px-2">{{item.id}}</td>
+      <td class="px-2">{{item.name}}</td> 
+      <td class="px-2">
+        <button class="vote-up btn btn-success btn-sm">Vote Up</button>
+        <button class="btn btn-danger btn-sm">Vote Down</button>
       </td>
-      <td>
-        <button class="remove-button" (click)="removeItem(item)">Remove</button>
+      <td class="px-2">
+        <button class="btn btn-warning btn-sm" (click)="removeItem(item)">Remove</button>
       </td>
     </tr>
   </table>
-  <div *ngIf="initDone">
-    <input #name id="new-item-name" type="text">
-    <button id="new-item-button" (click)="addItem(name.value)">Add item</button>
+  <div *ngIf="initDone" class="ml-1 mt-1 container">
+    <div class="row">
+      <input #name id="new-item-name" type="text">
+      <button id="new-item-button" class="btn btn-primary btn-sm" (click)="addItem(name.value)">Add item</button>
+    </div>
   </div>
 </div>
