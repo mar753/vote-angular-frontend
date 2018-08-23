@@ -20,6 +20,9 @@ describe('VotePageComponent', () => {
     putItem(id: number, name: boolean) {
       return of('');
     },
+    putVote(id: number, name: boolean) {
+      return of('');
+    },
     deleteItem(id: number) {
       return of('');
     }
@@ -83,6 +86,7 @@ describe('VotePageComponent', () => {
     service = TestBed.get(VotePageService);
     spyOn(service, 'postItem').and.returnValue(of(''));
     spyOn(service, 'putItem').and.returnValue(of(''));
+    spyOn(service, 'putVote').and.returnValue(of(''));
     spyOn(service, 'deleteItem').and.returnValue(of(''));
   });
 
@@ -215,6 +219,22 @@ describe('VotePageComponent', () => {
     expect(component.items.length).toEqual(1);
     component.editItem(component.items[0]);
     expect(service.putItem).not.toHaveBeenCalled();
+  });
+
+  it('should increase vote', () => {
+    expect(component.items.length).toEqual(0);
+    component.addItem('abc');
+    expect(component.items.length).toEqual(1);
+    component.editVote(component.items[0], 1);
+    expect(service.putVote).toHaveBeenCalledWith(1, 1);
+  });
+
+  it('should decrease vote', () => {
+    expect(component.items.length).toEqual(0);
+    component.addItem('abc');
+    expect(component.items.length).toEqual(1);
+    component.editVote(component.items[0], -1);
+    expect(service.putVote).toHaveBeenCalledWith(1, -1);
   });
 
   it('should remove item via view', async(() => {

@@ -23,16 +23,19 @@ export class VotePageComponent implements OnInit {
     this.idColumn = "ID";
     this.nameColumn = "Name";
     this.voteColumn = "Vote";
-    this.removeColumn = "Remove";
+    this.removeColumn = "Edit/Remove";
     this.edit = false;
   }
 
   ngOnInit() {
     this.votePageService.getItems().subscribe(items => {
-      this.items = items;
-      this.initDone = true;
+        this.items = items;
+        this.initDone = true;
       },
-      err => {console.error(err);}
+      err => {
+        this.initDone = true;
+        console.error(err);
+      }
     );
   }
 
@@ -47,6 +50,7 @@ export class VotePageComponent implements OnInit {
     this.items.push({
       id: newId,
       name: name,
+      vote: 0,
       editing: false,
       modified: false
     });
@@ -65,6 +69,14 @@ export class VotePageComponent implements OnInit {
       item.modified = false;
     }
     item.editing = !item.editing;
+  }
+
+  editVote(item, value) {
+    item.vote += parseInt(value);
+    this.votePageService.putVote(item.id, value).subscribe(
+      () => {},
+      err => {console.error(err);}
+    );
   }
 
   removeItem(item) {

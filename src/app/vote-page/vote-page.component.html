@@ -13,13 +13,16 @@
       </td>
       <td *ngIf="!item.editing" class="px-2">{{item.name}}</td>
       <td class="px-2">
-        <button class="btn btn-success btn-sm small-margin-r">Vote Up</button>
-        <button class="btn btn-danger btn-sm">Vote Down</button>
+        <button class="btn btn-success btn-sm small-margin-r"
+          (click)="editVote(item, 1)">Vote Up</button>
+        <button class="btn btn-danger btn-sm"
+          (click)="editVote(item, -1)">Vote Down</button>
+        {{item.vote}}
       </td>
       <td class="px-2">
         <button *ngIf="item.editing" class="btn btn-info btn-sm edit-button small-margin-r"
           (click)="editItem(item)">Save</button>
-        <button *ngIf="!item.editing" class="btn btn-dark btn-sm edit-button small-margin-r"
+        <button *ngIf="!item.editing" class="btn btn-dark btn-sm edit-button mr-1"
           (click)="editItem(item)">Edit</button>
         <button class="btn btn-warning btn-sm remove-button"
           (click)="removeItem(item)">Remove</button>

@@ -30,11 +30,18 @@ export class VotePageService {
     return this.httpClient.post(this.url + this.itemsRoute, body);
   }
 
-  putItem(id: number, value: number): Observable<any> {
+  putItem(id: number, value: string): Observable<any> {
     const body = {
       value: value
     };
     return this.httpClient.put(this.url + this.itemsRoute + '/' + id, body);
+  }
+
+  putVote(id: number, value: number): Observable<any> {
+    const body = {
+      value: value
+    };
+    return this.httpClient.put(this.url + this.itemsRoute + '/' + id + '/vote', body);
   }
 
   deleteItem(id: number): Observable<any> {

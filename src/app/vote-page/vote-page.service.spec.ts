@@ -8,8 +8,8 @@ import { VotePageService } from './vote-page.service';
 
 describe('VotePageService', () => {
   const mockData = {items: [
-    {id: 1, name: 'QWE', editing: false, modified: false},
-    {id: 2, name: 'RTY', editing: false, modified: false}
+    {id: 1, name: 'QWE', vote: 0, editing: false, modified: false},
+    {id: 2, name: 'RTY', vote: 0, editing: false, modified: false}
   ]};
 
   beforeEach(() => {
@@ -48,8 +48,19 @@ describe('VotePageService', () => {
 
   it('should edit item using PUT', inject([HttpTestingController, VotePageService],
     (httpMock: HttpTestingController, service: VotePageService) => {
-      service.putItem(3, -1).subscribe();
+      service.putItem(3, 'qwe').subscribe();
       const mockReq = httpMock.expectOne(service.url + service.itemsRoute + '/3');
+      expect(mockReq.cancelled).toBeFalsy();
+      expect(mockReq.request.method).toEqual('PUT');
+      expect(mockReq.request.body).toEqual({value: 'qwe'});
+      mockReq.flush(mockData);
+      httpMock.verify();
+  }));
+
+  it('should edit item vote using PUT', inject([HttpTestingController, VotePageService],
+    (httpMock: HttpTestingController, service: VotePageService) => {
+      service.putVote(2, -1).subscribe();
+      const mockReq = httpMock.expectOne(service.url + service.itemsRoute + '/2/vote');
       expect(mockReq.cancelled).toBeFalsy();
       expect(mockReq.request.method).toEqual('PUT');
       expect(mockReq.request.body).toEqual({value: -1});
