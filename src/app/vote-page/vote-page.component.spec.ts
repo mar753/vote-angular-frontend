@@ -6,12 +6,21 @@ import { VotePageService } from './vote-page.service';
 import { of } from 'rxjs';
 
 describe('VotePageComponent', () => {
+  let service: VotePageService;
   let component: VotePageComponent;
   let fixture: ComponentFixture<VotePageComponent>;
   let votePageServiceMock = {
-    response: [],
     getItems() {
       return of([]);
+    },
+    postItem(name: string) {
+      return of('');
+    },
+    putItem(id: number, name: boolean) {
+      return of('');
+    },
+    deleteItem(id: number) {
+      return of('');
     }
   };
 
@@ -43,7 +52,7 @@ describe('VotePageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ VotePageComponent ],
-      providers: [ {provide: VotePageService, useValue: votePageServiceMock } ]
+      providers: [ { provide: VotePageService, useValue: votePageServiceMock } ]
     })
     .compileComponents();
   }));
@@ -52,7 +61,10 @@ describe('VotePageComponent', () => {
     fixture = TestBed.createComponent(VotePageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    votePageServiceMock.response = [];
+    service = TestBed.get(VotePageService);
+    spyOn(service, 'postItem').and.returnValue(of(''));
+    spyOn(service, 'putItem').and.returnValue(of(''));
+    spyOn(service, 'deleteItem').and.returnValue(of(''));
   });
 
   it('should create', () => {
@@ -76,6 +88,32 @@ describe('VotePageComponent', () => {
     expect(component.items.length).toEqual(1);
     expect(component.items[0].id).toEqual(1);
     expect(component.items[0].name).toEqual('abc');
+    expect(service.postItem).toHaveBeenCalledTimes(1)
+  });
+
+  it('should add item via component - second item', () => {
+    expect(component.items.length).toEqual(0);
+    component.addItem('abc');
+    component.items[0].id = 999;
+    component.addItem('def');
+    expect(component.items.length).toEqual(2);
+    expect(component.items[1].id).toEqual(1000);
+    expect(component.items[1].name).toEqual('def');
+    expect(service.postItem).toHaveBeenCalledTimes(2);
+  });
+
+  it('should not add the same item name twice', () => {
+    expect(component.items.length).toEqual(0);
+    component.addItem('abc');
+    expect(component.items.length).toEqual(1);
+    expect(component.items[0].id).toEqual(1);
+    expect(component.items[0].name).toEqual('abc');
+    expect(service.postItem).toHaveBeenCalledTimes(1);
+    component.addItem('abc');
+    expect(component.items.length).toEqual(1);
+    expect(component.items[0].id).toEqual(1);
+    expect(component.items[0].name).toEqual('abc');
+    expect(service.postItem).toHaveBeenCalledTimes(1);
   });
 
   it('should remove item via view', async(() => {
@@ -90,6 +128,7 @@ describe('VotePageComponent', () => {
       .then(() => clickRemoveButton())
       .then(() => {
         expect(component.items.length).toEqual(0);
+        expect(service.deleteItem).toHaveBeenCalledTimes(1);
       });
   }));
 
@@ -101,5 +140,6 @@ describe('VotePageComponent', () => {
     expect(component.items[0].name).toEqual('abc');
     component.removeItem(component.items[0]);
     expect(component.items.length).toEqual(0);
+    expect(service.deleteItem).toHaveBeenCalledTimes(1);
   });
 });
