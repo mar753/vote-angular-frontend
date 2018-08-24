@@ -1,6 +1,6 @@
 # Vote
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.1.4. Angular 6 was used.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.1.4. Angular 6 was used. Node.js version >=8.11.4 required (earlier versions not tested).
 This is an example voting application (together with: vote-sql-backend and vote-nodejs-backend) front-end part with unit tests.
 
 ## Quick start
