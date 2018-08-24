@@ -1,6 +1,17 @@
 # Vote
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.1.4.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.1.4. Angular 6 was used.
+This is an example voting application (together with: vote-sql-backend and vote-nodejs-backend) front-end part with unit tests.
+
+## Quick start
+To get started clone this repository and in the cloned folder:
+1. run `npm install`
+2. run `npm start` or `npm run ng serve`
+
+To run unit tests with Karma and Jasmine:
+`npm test`
+
+### More commands (Angular CLI must be globally installed)
 
 ## Development server
 
